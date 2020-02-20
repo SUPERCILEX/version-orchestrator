@@ -8,6 +8,8 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.submit
 import org.gradle.kotlin.dsl.support.serviceOf
@@ -19,6 +21,7 @@ import javax.inject.Inject
 
 @CacheableTask
 internal abstract class ComputeVersionsTask : DefaultTask() {
+    @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputDirectory
     abstract val revDir: DirectoryProperty
 

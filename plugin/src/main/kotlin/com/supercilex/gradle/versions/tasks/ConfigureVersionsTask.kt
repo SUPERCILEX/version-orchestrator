@@ -9,6 +9,8 @@ import org.gradle.api.plugins.BasePluginConvention
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.getPluginByName
 import javax.inject.Inject
@@ -17,9 +19,11 @@ internal abstract class ConfigureVersionsTask @Inject constructor(
         @get:Nested val extension: VersionMasterExtension,
         @get:Internal internal val variant: ApplicationVariant
 ) : DefaultTask() {
+    @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputFile
     abstract val versionCodeFile: RegularFileProperty
 
+    @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputFile
     abstract val versionNameFile: RegularFileProperty
 
