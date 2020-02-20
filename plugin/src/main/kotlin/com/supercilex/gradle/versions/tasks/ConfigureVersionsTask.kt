@@ -1,0 +1,44 @@
+package com.supercilex.gradle.versions.tasks
+
+import com.android.build.gradle.api.ApkVariantOutput
+import com.android.build.gradle.api.ApplicationVariant
+import com.supercilex.gradle.versions.VersionMasterExtension
+import org.gradle.api.DefaultTask
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.plugins.BasePluginConvention
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.TaskAction
+import org.gradle.kotlin.dsl.getPluginByName
+import javax.inject.Inject
+
+internal abstract class ConfigureVersionsTask @Inject constructor(
+        @get:Nested val extension: VersionMasterExtension,
+        @get:Internal internal val variant: ApplicationVariant
+) : DefaultTask() {
+    @get:InputFile
+    abstract val versionCodeFile: RegularFileProperty
+
+    @get:InputFile
+    abstract val versionNameFile: RegularFileProperty
+
+    @TaskAction
+    fun configureVersions() {
+        val basePlugin = project.convention.getPluginByName<BasePluginConvention>("base")
+        val versionCode = versionCodeFile.get().asFile.readText().toInt()
+        val versionName = versionNameFile.get().asFile.readText()
+
+        variant.outputs.filterIsInstance<ApkVariantOutput>().forEach { output ->
+            if (extension.configureVersionCode.get()) {
+                output.versionCodeOverride = versionCode + extension.versionCodeOffset.get().toInt()
+            }
+
+            if (extension.configureVersionName.get()) {
+                output.versionNameOverride = versionName
+            }
+
+            output.outputFileName = "${basePlugin.archivesBaseName}-$versionName.apk"
+        }
+    }
+}
