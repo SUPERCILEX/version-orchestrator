@@ -24,6 +24,7 @@ internal class VersionMasterPlugin : Plugin<Project> {
         project.rootProject.plugins.apply(VersionMasterRootPlugin::class)
 
         project.extensions.create<VersionMasterExtension>(VERSION_MASTER_PATH).apply {
+            configureDebugBuilds.convention(false)
             configureVersionCode.convention(true)
             configureVersionName.convention(true)
             versionCodeOffset.convention(0)
@@ -45,8 +46,12 @@ internal class VersionMasterPlugin : Plugin<Project> {
         val extension = project.extensions.getByType<VersionMasterExtension>()
         val android = project.the<AppExtension>()
 
-        android.applicationVariants.whenObjectAdded {
+        android.applicationVariants.whenObjectAdded v@{
             val variantName = name.capitalize()
+
+            if (buildType.isDebuggable && !extension.configureDebugBuilds.get()) {
+                return@v
+            }
 
             val configureVersions = project.tasks.register<ConfigureVersionsTask>(
                     "configure${variantName}Versions",

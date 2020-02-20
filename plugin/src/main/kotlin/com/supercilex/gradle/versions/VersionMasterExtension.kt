@@ -11,6 +11,14 @@ abstract class VersionMasterExtension @JvmOverloads constructor(
         internal val name: String = "default" // Needed for Gradle
 ) {
     /**
+     * Enables or disables version configuration for debug builds.
+     *
+     * Defaults to `false`.
+     */
+    @get:Input
+    abstract val configureDebugBuilds: Property<Boolean>
+
+    /**
      * Enables or disables version code configuration.
      *
      * Defaults to `true`.
