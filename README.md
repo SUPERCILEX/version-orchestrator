@@ -16,6 +16,7 @@ Version Master provides an effortless and performant way to automate versioning 
 
 ## Table of contents
 
+1. [How does it work?](#how-does-it-work)
 1. [Installation](#installation)
    1. [Snapshot builds](#snapshot-builds)
 1. [Configuring Version Master](#configuring-version-master)
@@ -23,6 +24,12 @@ Version Master provides an effortless and performant way to automate versioning 
    1. [Disabling version name configuration](#disabling-version-name-configuration)
    1. [Enabling debug build configuration](#enabling-debug-build-configuration)
    1. [For existing apps](#for-existing-apps)
+
+## How does it work?
+
+Version Master looks at your Git history to compute a version code and name for your app. The
+version code is simply the number of commits in your repository while the version name is a
+combination of the latest tag, commit hash, and dirtiness flag.
 
 ## Installation
 
