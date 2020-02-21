@@ -18,8 +18,13 @@ tasks.withType<ValidatePlugins>().configureEach {
     enableStricterValidation.set(true)
 }
 
+val versionName = rootProject.file("version.txt").readText().trim()
 group = "com.supercilex.gradle"
-version = rootProject.file("version.txt").readText().trim()
+version = versionName
+
+tasks.withType<PublishToMavenRepository>().configureEach {
+    isEnabled = versionName.contains("snapshot", true)
+}
 
 gradlePlugin {
     plugins.create("versions") {
