@@ -4,6 +4,7 @@ import com.supercilex.gradle.versions.internal.execWithOutput
 import com.supercilex.gradle.versions.internal.safeCreateNewFile
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.submit
@@ -32,31 +33,51 @@ internal abstract class ComputeGitHashTask : DefaultTask() {
     }
 
     abstract class Computer @Inject constructor(
-            private val execOps: ExecOperations
+            private val executor: WorkerExecutor
     ) : WorkAction<Computer.Params> {
         override fun execute() {
-            val dirty = execOps.execWithOutput {
-                commandLine("git", "status", "--porcelain")
-            }.isNotEmpty()
-            val tags = execOps.execWithOutput {
-                commandLine("git", "tag", "--points-at", "HEAD")
+            executor.noIsolation().submit(HashComputer::class) {
+                rev.set(parameters.revs.file("current-git-rev.txt"))
             }
-            val hash = execOps.execWithOutput {
-                commandLine("git", "rev-parse", "HEAD")
+            executor.noIsolation().submit(StateComputer::class) {
+                state.set(parameters.revs.file("cache-invalidation.txt"))
             }
-
-            val currentRev = parameters.revs.file("current-git-rev.txt")
-                    .get().asFile.safeCreateNewFile()
-            val cacheInvalidation = parameters.revs.file("cache-invalidation.txt")
-                    .get().asFile.safeCreateNewFile()
-
-            currentRev.writeText(hash)
-            cacheInvalidation.writeText(listOf(tags, dirty).joinToString("\n"))
         }
 
         interface Params : WorkParameters {
             val revs: DirectoryProperty
         }
     }
-}
 
+    abstract class HashComputer @Inject constructor(
+            private val execOps: ExecOperations
+    ) : WorkAction<HashComputer.Params> {
+        override fun execute() {
+            val hash = execOps.execWithOutput {
+                commandLine("git", "rev-parse", "HEAD")
+            }
+
+            parameters.rev.get().asFile.safeCreateNewFile().writeText(hash)
+        }
+
+        interface Params : WorkParameters {
+            val rev: RegularFileProperty
+        }
+    }
+
+    abstract class StateComputer @Inject constructor(
+            private val execOps: ExecOperations
+    ) : WorkAction<StateComputer.Params> {
+        override fun execute() {
+            val state = execOps.execWithOutput {
+                commandLine("git", "describe", "--all", "--dirty")
+            }
+
+            parameters.state.get().asFile.safeCreateNewFile().writeText(state)
+        }
+
+        interface Params : WorkParameters {
+            val state: RegularFileProperty
+        }
+    }
+}

@@ -42,20 +42,16 @@ internal abstract class ComputeVersionsTask : DefaultTask() {
     }
 
     abstract class Computer @Inject constructor(
-            private val execOps: ExecOperations
+            private val executor: WorkerExecutor
     ) : WorkAction<Computer.Params> {
         override fun execute() {
-            val hash = parameters.hash.get().asFile.readText()
-
-            val versionCode = execOps.execWithOutput {
-                commandLine("git", "rev-list", "--count", hash)
+            executor.noIsolation().submit(VersionCodeComputer::class) {
+                hash.set(parameters.hash)
+                versionCode.set(parameters.versionCode)
             }
-            val versionName = execOps.execWithOutput {
-                commandLine("git", "describe", "--tags", "--always", "--dirty")
+            executor.noIsolation().submit(VersionNameComputer::class) {
+                versionName.set(parameters.versionName)
             }
-
-            parameters.versionCode.get().asFile.safeCreateNewFile().writeText(versionCode)
-            parameters.versionName.get().asFile.safeCreateNewFile().writeText(versionName)
         }
 
         interface Params : WorkParameters {
@@ -64,5 +60,38 @@ internal abstract class ComputeVersionsTask : DefaultTask() {
             val versionName: RegularFileProperty
         }
     }
-}
 
+    abstract class VersionCodeComputer @Inject constructor(
+            private val execOps: ExecOperations
+    ) : WorkAction<VersionCodeComputer.Params> {
+        override fun execute() {
+            val hash = parameters.hash.get().asFile.readText()
+            val versionCode = execOps.execWithOutput {
+                commandLine("git", "rev-list", "--count", hash)
+            }
+
+            parameters.versionCode.get().asFile.safeCreateNewFile().writeText(versionCode)
+        }
+
+        interface Params : WorkParameters {
+            val hash: RegularFileProperty
+            val versionCode: RegularFileProperty
+        }
+    }
+
+    abstract class VersionNameComputer @Inject constructor(
+            private val execOps: ExecOperations
+    ) : WorkAction<VersionNameComputer.Params> {
+        override fun execute() {
+            val versionName = execOps.execWithOutput {
+                commandLine("git", "describe", "--tags", "--always", "--dirty")
+            }
+
+            parameters.versionName.get().asFile.safeCreateNewFile().writeText(versionName)
+        }
+
+        interface Params : WorkParameters {
+            val versionName: RegularFileProperty
+        }
+    }
+}
