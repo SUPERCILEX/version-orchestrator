@@ -53,8 +53,7 @@ jobs:
   deploy_snapshot:
     needs: [build, test]
     runs-on: ubuntu-latest
-    # TODO re-enable once I get access to Sonatype
-    if: false && github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     env:
       SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
       SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
