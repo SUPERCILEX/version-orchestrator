@@ -41,7 +41,7 @@ Master through the `plugins {}` DSL:
 ```kt
 plugins {
     id("com.android.application")
-    id("com.supercilex.gradle.versions") version "0.1.0"
+    id("com.supercilex.gradle.versions") version "0.2.0"
 }
 ```
 
@@ -52,7 +52,7 @@ plugins {
 ```groovy
 plugins {
     id 'com.android.application'
-    id 'com.supercilex.gradle.versions' version '0.1.0'
+    id 'com.supercilex.gradle.versions' version '0.2.0'
 }
 ```
 
@@ -75,7 +75,7 @@ buildscript {
 
     dependencies {
         // ...
-        classpath("com.supercilex.gradle:version-master:0.2.0-SNAPSHOT")
+        classpath("com.supercilex.gradle:version-master:0.3.0-SNAPSHOT")
     }
 }
 ```
@@ -93,7 +93,7 @@ buildscript {
 
     dependencies {
         // ...
-        classpath 'com.supercilex.gradle:version-master:0.2.0-SNAPSHOT'
+        classpath 'com.supercilex.gradle:version-master:0.3.0-SNAPSHOT'
     }
 }
 ```
