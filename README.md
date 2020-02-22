@@ -41,7 +41,7 @@ Master through the `plugins {}` DSL:
 ```kt
 plugins {
     id("com.android.application")
-    id("com.supercilex.gradle.versions") version "0.2.0"
+    id("com.supercilex.gradle.versions") version "0.3.0"
 }
 ```
 
@@ -52,7 +52,7 @@ plugins {
 ```groovy
 plugins {
     id 'com.android.application'
-    id 'com.supercilex.gradle.versions' version '0.2.0'
+    id 'com.supercilex.gradle.versions' version '0.3.0'
 }
 ```
 
