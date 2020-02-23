@@ -17,6 +17,8 @@ Version Master provides an effortless and performant way to automate versioning 
 ## Table of contents
 
 1. [How does it work?](#how-does-it-work)
+   1. [Version codes](#version-codes)
+   1. [Version names](#version-names)
 1. [Installation](#installation)
    1. [Snapshot builds](#snapshot-builds)
 1. [Configuring Version Master](#configuring-version-master)
@@ -39,11 +41,11 @@ versionCode = existingAppOffset + commitCount + (100 * numberOfNonPatchTagsMinus
 ```
 
 For example, you have 5 commits and tag a `1.0.0` release (`versionCode = 5`). On your
-6th commit, the version code will jump to 106. You continue making commits until you realize a
+6th commit, the version code will jump to `106`. You continue making commits until you realize a
 critical bug needs to be fixed. Branching off the `1.0.0` release, you fix the bug and tag your
 `1.0.1` hotfix (`versionCode = 6`). After merging the hotfix and 3 other commits from your new
 features back into master, you create a `1.1.0` release (`versionCode = 110`). On your 11th commit,
-the version code will jump to 211. This continues on, allowing you to make 100 patch releases for
+the version code will jump to `211`. This continues on, allowing you to make 100 patch releases for
 each major or minor release.
 
 ### Version names
