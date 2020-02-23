@@ -30,12 +30,12 @@ internal abstract class ConfigureVersionsTask @Inject constructor(
     @TaskAction
     fun configureVersions() {
         val basePlugin = project.convention.getPluginByName<BasePluginConvention>("base")
-        val versionCode = versionCodeFile.get().asFile.readText().toInt()
-        val versionName = versionNameFile.get().asFile.readText()
+        val versionCode by lazy { versionCodeFile.get().asFile.readText().toLong() }
+        val versionName by lazy { versionNameFile.get().asFile.readText() }
 
         variant.outputs.filterIsInstance<ApkVariantOutput>().forEach { output ->
             if (extension.configureVersionCode.get()) {
-                output.versionCodeOverride = versionCode + extension.versionCodeOffset.get().toInt()
+                output.versionCodeOverride = versionCode.toInt()
             }
 
             if (extension.configureVersionName.get()) {

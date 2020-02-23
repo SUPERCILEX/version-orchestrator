@@ -1,6 +1,6 @@
 package com.supercilex.gradle.versions.internal
 
-import com.supercilex.gradle.versions.tasks.ComputeVersionsTask
+import com.supercilex.gradle.versions.tasks.RetrieveGitInfoTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.register
@@ -11,11 +11,11 @@ internal class VersionMasterRootPlugin : Plugin<Project> {
         check(project === project.rootProject)
         validateRuntime()
 
-        project.tasks.register<ComputeVersionsTask>("computeAppVersions") {
-            versionCodeFile.set(project.layout.buildDirectory.file(
-                    "version-master/version-code.txt"))
-            versionNameFile.set(project.layout.buildDirectory.file(
-                    "version-master/version-name.txt"))
+        project.tasks.register<RetrieveGitInfoTask>("retrieveGitVersionInfo") {
+            val dir = project.layout.buildDirectory.dir("version-master/git")
+            commitCountFile.set(dir.map { it.file("commit-count.txt") })
+            tagListFile.set(dir.map { it.file("tag-list.txt") })
+            gitDescribeFile.set(dir.map { it.file("version-name.txt") })
         }
     }
 }
