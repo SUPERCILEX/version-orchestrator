@@ -15,7 +15,7 @@ internal class VersionMasterRootPlugin : Plugin<Project> {
             val dir = project.layout.buildDirectory.dir("version-master/git")
             commitCountFile.set(dir.map { it.file("commit-count.txt") })
             tagListFile.set(dir.map { it.file("tag-list.txt") })
-            gitDescribeFile.set(dir.map { it.file("version-name.txt") })
+            gitDescribeFile.set(dir.map { it.file("git-describe.txt") })
         }
     }
 }
