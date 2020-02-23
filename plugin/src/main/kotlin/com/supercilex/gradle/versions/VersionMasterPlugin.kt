@@ -4,9 +4,13 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
 import com.supercilex.gradle.versions.internal.VERSION_MASTER_PATH
 import com.supercilex.gradle.versions.internal.VersionMasterRootPlugin
-import com.supercilex.gradle.versions.tasks.ComputeVersionsTask
+import com.supercilex.gradle.versions.internal.useIf
+import com.supercilex.gradle.versions.tasks.ComputeVersionCodeTask
+import com.supercilex.gradle.versions.tasks.ComputeVersionNameTask
 import com.supercilex.gradle.versions.tasks.ConfigureVersionsTask
-import com.supercilex.gradle.versions.tasks.RetrieveGitInfoTask
+import com.supercilex.gradle.versions.tasks.RetrieveGitCommitCountTask
+import com.supercilex.gradle.versions.tasks.RetrieveGitDescriptionTask
+import com.supercilex.gradle.versions.tasks.RetrieveGitTagListTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
@@ -46,23 +50,39 @@ internal class VersionMasterPlugin : Plugin<Project> {
     private fun applyInternal(project: Project) {
         val extension = project.extensions.getByType<VersionMasterExtension>()
         val android = project.the<AppExtension>()
+        val workingDir = project.layout.buildDirectory.dir("version-master")
 
-        val computeVersions = project.tasks.register<ComputeVersionsTask>(
-                "computeAppVersions",
-                extension
-        )
+        val computeVersionCode =
+                project.tasks.register<ComputeVersionCodeTask>("computeAppVersionCode")
+        val computeVersionName =
+                project.tasks.register<ComputeVersionNameTask>("computeAppVersionName")
 
-        computeVersions {
-            val versionsTask = project.rootProject.tasks.named(
-                    "retrieveGitVersionInfo", RetrieveGitInfoTask::class)
+        computeVersionCode {
+            versionCodeOffset.set(extension.versionCodeOffset)
 
-            commitCountFile.set(versionsTask.flatMap { it.commitCountFile })
-            tagListFile.set(versionsTask.flatMap { it.tagListFile })
-            gitDescribeFile.set(versionsTask.flatMap { it.gitDescribeFile })
+            commitCountFile.set(project.rootProject.tasks.named(
+                    "retrieveGitCommitCount",
+                    RetrieveGitCommitCountTask::class
+            ).flatMap { it.commitCountFile })
+            tagListFile.set(project.rootProject.tasks.named(
+                    "retrieveGitTagList",
+                    RetrieveGitTagListTask::class
+            ).flatMap { it.tagListFile })
+            gitDescribeFile.set(project.rootProject.tasks.named(
+                    "retrieveGitDescription",
+                    RetrieveGitDescriptionTask::class
+            ).flatMap { it.gitDescribeFile })
 
-            val dir = project.layout.buildDirectory.dir("version-master")
-            versionCodeFile.set(dir.map { it.file("version-code.txt") })
-            versionNameFile.set(dir.map { it.file("version-name.txt") })
+            versionCodeFile.set(workingDir.map { it.file("version-code.txt") })
+        }
+
+        computeVersionName {
+            gitDescribeFile.set(project.rootProject.tasks.named(
+                    "retrieveGitDescription",
+                    RetrieveGitDescriptionTask::class
+            ).flatMap { it.gitDescribeFile })
+
+            versionNameFile.set(workingDir.map { it.file("version-name.txt") })
         }
 
         android.applicationVariants.whenObjectAdded v@{
@@ -79,8 +99,12 @@ internal class VersionMasterPlugin : Plugin<Project> {
             )
 
             configureVersions {
-                versionCodeFile.set(computeVersions.flatMap { it.versionCodeFile })
-                versionNameFile.set(computeVersions.flatMap { it.versionNameFile })
+                versionCodeFile.set(computeVersionCode.flatMap {
+                    it.versionCodeFile
+                }.useIf(project.providers, extension.configureVersionCode))
+                versionNameFile.set(computeVersionName.flatMap {
+                    it.versionNameFile
+                }.useIf(project.providers, extension.configureVersionName))
             }
             preBuildProvider {
                 dependsOn(configureVersions)

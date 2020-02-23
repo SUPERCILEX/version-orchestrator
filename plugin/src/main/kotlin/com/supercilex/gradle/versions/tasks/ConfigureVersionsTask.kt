@@ -9,6 +9,7 @@ import org.gradle.api.plugins.BasePluginConvention
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
@@ -19,10 +20,12 @@ internal abstract class ConfigureVersionsTask @Inject constructor(
         @get:Nested val extension: VersionMasterExtension,
         @get:Internal internal val variant: ApplicationVariant
 ) : DefaultTask() {
+    @get:Optional
     @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputFile
     abstract val versionCodeFile: RegularFileProperty
 
+    @get:Optional
     @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputFile
     abstract val versionNameFile: RegularFileProperty
@@ -40,9 +43,8 @@ internal abstract class ConfigureVersionsTask @Inject constructor(
 
             if (extension.configureVersionName.get()) {
                 output.versionNameOverride = versionName
+                output.outputFileName = "${basePlugin.archivesBaseName}-$versionName.apk"
             }
-
-            output.outputFileName = "${basePlugin.archivesBaseName}-$versionName.apk"
         }
     }
 }
