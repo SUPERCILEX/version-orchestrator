@@ -97,7 +97,7 @@ buildscript {
 
     dependencies {
         // ...
-        classpath("com.supercilex.gradle:version-master:0.4.0-SNAPSHOT")
+        classpath("com.supercilex.gradle:version-master:0.5.0-SNAPSHOT")
     }
 }
 ```
@@ -115,7 +115,7 @@ buildscript {
 
     dependencies {
         // ...
-        classpath 'com.supercilex.gradle:version-master:0.4.0-SNAPSHOT'
+        classpath 'com.supercilex.gradle:version-master:0.5.0-SNAPSHOT'
     }
 }
 ```
