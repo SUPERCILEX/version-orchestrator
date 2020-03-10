@@ -64,9 +64,10 @@ internal abstract class ComputeVersionCodeTask : DefaultTask() {
 
             val offset = parameters.offset.get()
             val commitCount = commitCountFileContents.toLong()
-            val hotfixSpacing = (minorTags.size - isCleanlyOnTag).coerceAtLeast(0) * 100
+            val minorTagsCount = minorTags.size
+            val hotfixSpacing = (minorTagsCount - isCleanlyOnTag).coerceAtLeast(0) * 100
 
-            val versionCode = (offset + commitCount + hotfixSpacing).toString()
+            val versionCode = (offset + commitCount + minorTagsCount + hotfixSpacing).toString()
             parameters.versionCode.get().asFile.safeCreateNewFile().writeText(versionCode)
         }
 

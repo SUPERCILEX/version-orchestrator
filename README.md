@@ -37,11 +37,14 @@ The version code is a combination of the number of commits in your repository an
 enabling support for hotfix releases. The math looks a little like this:
 
 ```kt
-versionCode = existingAppOffset + commitCount + (100 * numberOfNonPatchTagsMinusOneIfIsRelease)
+versionCode = existingAppOffset +
+        commitCount +
+        numberOfNonPatchTags +
+        100 * numberOfNonPatchTagsMinusOneIfIsRelease
 ```
 
-For example, you have 5 commits and tag a `1.0.0` release (`versionCode = 5`). On your
-6th commit, the version code will jump to `106`. You continue making commits until you realize a
+For example, you have 4 commits and tag a `1.0.0` release (`versionCode = 5`). On your
+5th commit, the version code will jump to `106`. You continue making commits until you realize a
 critical bug needs to be fixed. Branching off the `1.0.0` release, you fix the bug and tag your
 `1.0.1` hotfix (`versionCode = 6`). After merging the hotfix and 3 other commits from your new
 features back into master, you create a `1.1.0` release (`versionCode = 110`). On your 11th commit,
