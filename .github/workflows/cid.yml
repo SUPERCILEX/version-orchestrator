@@ -44,8 +44,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.gradle
-          key: ${{ runner.os }}-v2-gradle-${{ hashFiles('**/*') }}
+          key: ${{ runner.os }}-v2-gradle-test-${{ hashFiles('**/*') }}
           restore-keys: |
+            ${{ runner.os }}-v2-gradle-test-
             ${{ runner.os }}-v2-gradle-
       - name: Run tests
         run: ./gradlew check test -S
@@ -68,8 +69,10 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.gradle
-          key: ${{ runner.os }}-v2-gradle-${{ hashFiles('**/*') }}
+          key: ${{ runner.os }}-v2-gradle-deploy-snapshot-${{ hashFiles('**/*') }}
           restore-keys: |
+            ${{ runner.os }}-v2-gradle-deploy-snapshot-
+            ${{ runner.os }}-v2-gradle-deploy-
             ${{ runner.os }}-v2-gradle-
       - name: Build project
         run: ./gradlew assemble
@@ -91,8 +94,10 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.gradle
-          key: ${{ runner.os }}-v2-gradle-${{ hashFiles('**/*') }}
+          key: ${{ runner.os }}-v2-gradle-deploy-release-${{ hashFiles('**/*') }}
           restore-keys: |
+            ${{ runner.os }}-v2-gradle-deploy-release-
+            ${{ runner.os }}-v2-gradle-deploy-
             ${{ runner.os }}-v2-gradle-
       - name: Install creds
         run: |
