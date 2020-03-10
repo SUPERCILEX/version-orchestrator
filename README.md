@@ -66,7 +66,7 @@ Master through the `plugins {}` DSL:
 ```kt
 plugins {
     id("com.android.application")
-    id("com.supercilex.gradle.versions") version "0.4.0"
+    id("com.supercilex.gradle.versions") version "0.5.0"
 }
 ```
 
@@ -77,7 +77,7 @@ plugins {
 ```groovy
 plugins {
     id 'com.android.application'
-    id 'com.supercilex.gradle.versions' version '0.4.0'
+    id 'com.supercilex.gradle.versions' version '0.5.0'
 }
 ```
 
