@@ -7,14 +7,15 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.submit
-import org.gradle.kotlin.dsl.support.serviceOf
 import org.gradle.process.ExecOperations
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkerExecutor
 import javax.inject.Inject
 
-internal abstract class RetrieveGitDescriptionTask : DefaultTask() {
+internal abstract class RetrieveGitDescriptionTask @Inject constructor(
+        private val executor: WorkerExecutor
+) : DefaultTask() {
     @get:OutputFile
     abstract val gitDescribeFile: RegularFileProperty
 
@@ -25,7 +26,6 @@ internal abstract class RetrieveGitDescriptionTask : DefaultTask() {
 
     @TaskAction
     fun retrieveInfo() {
-        val executor = project.serviceOf<WorkerExecutor>()
         executor.noIsolation().submit(Retriever::class) {
             gitDescribe.set(gitDescribeFile)
         }

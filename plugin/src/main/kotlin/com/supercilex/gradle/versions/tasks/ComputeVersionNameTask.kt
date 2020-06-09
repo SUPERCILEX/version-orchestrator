@@ -10,13 +10,15 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.submit
-import org.gradle.kotlin.dsl.support.serviceOf
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkerExecutor
+import javax.inject.Inject
 
 @CacheableTask
-internal abstract class ComputeVersionNameTask : DefaultTask() {
+internal abstract class ComputeVersionNameTask @Inject constructor(
+        private val executor: WorkerExecutor
+) : DefaultTask() {
     @get:PathSensitive(PathSensitivity.RELATIVE)
     @get:InputFile
     abstract val gitDescribeFile: RegularFileProperty
@@ -26,7 +28,6 @@ internal abstract class ComputeVersionNameTask : DefaultTask() {
 
     @TaskAction
     fun computeVersions() {
-        val executor = project.serviceOf<WorkerExecutor>()
         executor.noIsolation().submit(Computer::class) {
             gitDescribe.set(gitDescribeFile)
 

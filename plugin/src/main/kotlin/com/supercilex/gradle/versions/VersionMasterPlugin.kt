@@ -1,22 +1,24 @@
 package com.supercilex.gradle.versions
 
-import com.android.build.gradle.AppExtension
+import com.android.build.api.variant.impl.VariantOutputImpl
 import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.supercilex.gradle.versions.internal.VERSION_MASTER_PATH
 import com.supercilex.gradle.versions.internal.VersionMasterRootPlugin
 import com.supercilex.gradle.versions.internal.useIf
 import com.supercilex.gradle.versions.tasks.ComputeVersionCodeTask
 import com.supercilex.gradle.versions.tasks.ComputeVersionNameTask
-import com.supercilex.gradle.versions.tasks.ConfigureVersionsTask
 import com.supercilex.gradle.versions.tasks.RetrieveGitCommitCountTask
 import com.supercilex.gradle.versions.tasks.RetrieveGitDescriptionTask
 import com.supercilex.gradle.versions.tasks.RetrieveGitTagListTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.BasePluginConvention
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.findPlugin
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.getPlugin
 import org.gradle.kotlin.dsl.invoke
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.register
@@ -49,7 +51,7 @@ internal class VersionMasterPlugin : Plugin<Project> {
 
     private fun applyInternal(project: Project) {
         val extension = project.extensions.getByType<VersionMasterExtension>()
-        val android = project.the<AppExtension>()
+        val android = project.the<BaseAppModuleExtension>()
         val workingDir = project.layout.buildDirectory.dir("version-master")
 
         val computeVersionCode =
@@ -85,29 +87,25 @@ internal class VersionMasterPlugin : Plugin<Project> {
             versionNameFile.set(workingDir.map { it.file("version-name.txt") })
         }
 
-        android.applicationVariants.whenObjectAdded v@{
-            val variantName = name.capitalize()
-
-            if (buildType.isDebuggable && !extension.configureDebugBuilds.get()) {
+        val basePlugin = project.convention.getPlugin<BasePluginConvention>()
+        android.onVariants v@{
+            if (!enabled || debuggable && !extension.configureDebugBuilds.get()) {
                 return@v
             }
 
-            val configureVersions = project.tasks.register<ConfigureVersionsTask>(
-                    "configure${variantName}Versions",
-                    extension,
-                    this
-            )
-
-            configureVersions {
-                versionCodeFile.set(computeVersionCode.flatMap {
-                    it.versionCodeFile
-                }.useIf(project.providers, extension.configureVersionCode))
-                versionNameFile.set(computeVersionName.flatMap {
-                    it.versionNameFile
-                }.useIf(project.providers, extension.configureVersionName))
-            }
-            preBuildProvider {
-                dependsOn(configureVersions)
+            onProperties {
+                for (output in outputs) {
+                    output.versionCode.set(computeVersionCode.map {
+                        it.versionCodeFile.get().asFile.readText().toInt()
+                    }.useIf(project.providers, extension.configureVersionCode))
+                    output.versionName.set(computeVersionName.map {
+                        it.versionNameFile.get().asFile.readText()
+                    }.useIf(project.providers, extension.configureVersionName))
+                    (output as VariantOutputImpl).outputFileName.set(computeVersionName.map {
+                        "${basePlugin.archivesBaseName}-${applicationId.get()}-" +
+                                "${output.baseName}-${output.versionName.get()}.apk"
+                    }.useIf(project.providers, extension.configureVersionName))
+                }
             }
         }
     }
