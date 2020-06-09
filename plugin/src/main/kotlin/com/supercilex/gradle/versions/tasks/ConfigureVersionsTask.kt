@@ -43,7 +43,8 @@ internal abstract class ConfigureVersionsTask @Inject constructor(
 
             if (extension.configureVersionName.get()) {
                 output.versionNameOverride = versionName
-                output.outputFileName = "${basePlugin.archivesBaseName}-$versionName.apk"
+                output.outputFileName = "${basePlugin.archivesBaseName}-${variant.applicationId}-" +
+                        "${output.baseName}-$versionName.apk"
             }
         }
     }
