@@ -5,7 +5,6 @@ import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.supercilex.gradle.versions.internal.VERSION_MASTER_PATH
 import com.supercilex.gradle.versions.internal.VersionMasterRootPlugin
-import com.supercilex.gradle.versions.internal.useIf
 import com.supercilex.gradle.versions.tasks.ComputeVersionCode
 import com.supercilex.gradle.versions.tasks.ComputeVersionName
 import com.supercilex.gradle.versions.tasks.RetrieveGitCommitCount
@@ -97,16 +96,21 @@ internal class VersionMasterPlugin : Plugin<Project> {
 
             onProperties {
                 for (output in outputs) {
-                    output.versionCode.set(computeVersionCode.map {
-                        it.versionCodeFile.get().asFile.readText().toInt()
-                    }.useIf(project.providers, extension.configureVersionCode))
-                    output.versionName.set(computeVersionName.map {
-                        it.versionNameFile.get().asFile.readText()
-                    }.useIf(project.providers, extension.configureVersionName))
-                    (output as VariantOutputImpl).outputFileName.set(computeVersionName.map {
-                        "${basePlugin.archivesBaseName}-${applicationId.get()}-" +
-                                "${output.baseName}-${output.versionName.get()}.apk"
-                    }.useIf(project.providers, extension.configureVersionName))
+                    if (extension.configureVersionCode.forUseAtConfigurationTime().get()) {
+                        output.versionCode.set(computeVersionCode.map {
+                            it.versionCodeFile.get().asFile.readText().toInt()
+                        })
+                    }
+
+                    if (extension.configureVersionName.forUseAtConfigurationTime().get()) {
+                        output.versionName.set(computeVersionName.map {
+                            it.versionNameFile.get().asFile.readText()
+                        })
+                        (output as VariantOutputImpl).outputFileName.set(computeVersionName.map {
+                            "${basePlugin.archivesBaseName}-${applicationId.get()}-" +
+                                    "${output.baseName}-${output.versionName.get()}.apk"
+                        })
+                    }
                 }
             }
         }
