@@ -89,7 +89,9 @@ internal class VersionMasterPlugin : Plugin<Project> {
 
         val basePlugin = project.convention.getPlugin<BasePluginConvention>()
         android.onVariants v@{
-            if (!enabled || debuggable && !extension.configureDebugBuilds.get()) {
+            val shouldConfigureDebugBuilds =
+                    extension.configureDebugBuilds.forUseAtConfigurationTime().get()
+            if (!enabled || debuggable && !shouldConfigureDebugBuilds) {
                 return@v
             }
 

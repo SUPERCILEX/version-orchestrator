@@ -18,7 +18,8 @@ tasks.withType<ValidatePlugins>().configureEach {
     enableStricterValidation.set(true)
 }
 
-val versionName = rootProject.file("version.txt").readText().trim()
+val versionName = providers.fileContents(rootProject.layout.projectDirectory.file("version.txt"))
+        .asText.forUseAtConfigurationTime().get().trim()
 group = "com.supercilex.gradle"
 version = versionName
 
@@ -54,8 +55,10 @@ publishing {
             url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
 
             credentials {
-                username = System.getenv("SONATYPE_NEXUS_USERNAME")
-                password = System.getenv("SONATYPE_NEXUS_PASSWORD")
+                username = providers.environmentVariable("SONATYPE_NEXUS_USERNAME")
+                        .forUseAtConfigurationTime().orNull
+                password = providers.environmentVariable("SONATYPE_NEXUS_PASSWORD")
+                        .forUseAtConfigurationTime().orNull
             }
         }
     }
