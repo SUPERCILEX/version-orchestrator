@@ -13,11 +13,11 @@ import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkerExecutor
 import javax.inject.Inject
 
-internal abstract class RetrieveGitDescriptionTask @Inject constructor(
+internal abstract class RetrieveGitTagList @Inject constructor(
         private val executor: WorkerExecutor
 ) : DefaultTask() {
     @get:OutputFile
-    abstract val gitDescribeFile: RegularFileProperty
+    abstract val tagListFile: RegularFileProperty
 
     init {
         // We don't know what's changed on the Git side of things
@@ -27,7 +27,7 @@ internal abstract class RetrieveGitDescriptionTask @Inject constructor(
     @TaskAction
     fun retrieveInfo() {
         executor.noIsolation().submit(Retriever::class) {
-            gitDescribe.set(gitDescribeFile)
+            tagList.set(tagListFile)
         }
     }
 
@@ -35,15 +35,15 @@ internal abstract class RetrieveGitDescriptionTask @Inject constructor(
             private val execOps: ExecOperations
     ) : WorkAction<Retriever.Params> {
         override fun execute() {
-            val gitDescribe = execOps.execWithOutput {
-                commandLine("git", "describe", "--tags", "--always", "--dirty")
+            val tagList = execOps.execWithOutput {
+                commandLine("git", "tag", "--merged", "HEAD")
             }
 
-            parameters.gitDescribe.get().asFile.safeCreateNewFile().writeText(gitDescribe)
+            parameters.tagList.get().asFile.safeCreateNewFile().writeText(tagList)
         }
 
         interface Params : WorkParameters {
-            val gitDescribe: RegularFileProperty
+            val tagList: RegularFileProperty
         }
     }
 }

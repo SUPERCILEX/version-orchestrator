@@ -19,7 +19,7 @@ import org.gradle.workers.WorkerExecutor
 import javax.inject.Inject
 
 @CacheableTask
-internal abstract class ComputeVersionCodeTask @Inject constructor(
+internal abstract class ComputeVersionCode @Inject constructor(
         private val executor: WorkerExecutor
 ) : DefaultTask() {
     @get:Input

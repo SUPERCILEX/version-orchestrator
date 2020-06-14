@@ -13,7 +13,7 @@ import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkerExecutor
 import javax.inject.Inject
 
-internal abstract class RetrieveGitCommitCountTask @Inject constructor(
+internal abstract class RetrieveGitCommitCount @Inject constructor(
         private val executor: WorkerExecutor
 ) : DefaultTask() {
     @get:OutputFile

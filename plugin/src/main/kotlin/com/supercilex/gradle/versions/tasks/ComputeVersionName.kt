@@ -16,7 +16,7 @@ import org.gradle.workers.WorkerExecutor
 import javax.inject.Inject
 
 @CacheableTask
-internal abstract class ComputeVersionNameTask @Inject constructor(
+internal abstract class ComputeVersionName @Inject constructor(
         private val executor: WorkerExecutor
 ) : DefaultTask() {
     @get:PathSensitive(PathSensitivity.RELATIVE)

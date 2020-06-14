@@ -6,11 +6,11 @@ import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.supercilex.gradle.versions.internal.VERSION_MASTER_PATH
 import com.supercilex.gradle.versions.internal.VersionMasterRootPlugin
 import com.supercilex.gradle.versions.internal.useIf
-import com.supercilex.gradle.versions.tasks.ComputeVersionCodeTask
-import com.supercilex.gradle.versions.tasks.ComputeVersionNameTask
-import com.supercilex.gradle.versions.tasks.RetrieveGitCommitCountTask
-import com.supercilex.gradle.versions.tasks.RetrieveGitDescriptionTask
-import com.supercilex.gradle.versions.tasks.RetrieveGitTagListTask
+import com.supercilex.gradle.versions.tasks.ComputeVersionCode
+import com.supercilex.gradle.versions.tasks.ComputeVersionName
+import com.supercilex.gradle.versions.tasks.RetrieveGitCommitCount
+import com.supercilex.gradle.versions.tasks.RetrieveGitDescription
+import com.supercilex.gradle.versions.tasks.RetrieveGitTagList
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePluginConvention
@@ -55,24 +55,24 @@ internal class VersionMasterPlugin : Plugin<Project> {
         val workingDir = project.layout.buildDirectory.dir("version-master")
 
         val computeVersionCode =
-                project.tasks.register<ComputeVersionCodeTask>("computeAppVersionCode")
+                project.tasks.register<ComputeVersionCode>("computeAppVersionCode")
         val computeVersionName =
-                project.tasks.register<ComputeVersionNameTask>("computeAppVersionName")
+                project.tasks.register<ComputeVersionName>("computeAppVersionName")
 
         computeVersionCode {
             versionCodeOffset.set(extension.versionCodeOffset)
 
             commitCountFile.set(project.rootProject.tasks.named(
                     "retrieveGitCommitCount",
-                    RetrieveGitCommitCountTask::class
+                    RetrieveGitCommitCount::class
             ).flatMap { it.commitCountFile })
             tagListFile.set(project.rootProject.tasks.named(
                     "retrieveGitTagList",
-                    RetrieveGitTagListTask::class
+                    RetrieveGitTagList::class
             ).flatMap { it.tagListFile })
             gitDescribeFile.set(project.rootProject.tasks.named(
                     "retrieveGitDescription",
-                    RetrieveGitDescriptionTask::class
+                    RetrieveGitDescription::class
             ).flatMap { it.gitDescribeFile })
 
             versionCodeFile.set(workingDir.map { it.file("version-code.txt") })
@@ -81,7 +81,7 @@ internal class VersionMasterPlugin : Plugin<Project> {
         computeVersionName {
             gitDescribeFile.set(project.rootProject.tasks.named(
                     "retrieveGitDescription",
-                    RetrieveGitDescriptionTask::class
+                    RetrieveGitDescription::class
             ).flatMap { it.gitDescribeFile })
 
             versionNameFile.set(workingDir.map { it.file("version-name.txt") })

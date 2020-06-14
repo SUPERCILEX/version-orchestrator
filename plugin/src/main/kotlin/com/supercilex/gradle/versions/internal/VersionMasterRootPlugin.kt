@@ -1,8 +1,8 @@
 package com.supercilex.gradle.versions.internal
 
-import com.supercilex.gradle.versions.tasks.RetrieveGitCommitCountTask
-import com.supercilex.gradle.versions.tasks.RetrieveGitDescriptionTask
-import com.supercilex.gradle.versions.tasks.RetrieveGitTagListTask
+import com.supercilex.gradle.versions.tasks.RetrieveGitCommitCount
+import com.supercilex.gradle.versions.tasks.RetrieveGitDescription
+import com.supercilex.gradle.versions.tasks.RetrieveGitTagList
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.register
@@ -14,13 +14,13 @@ internal class VersionMasterRootPlugin : Plugin<Project> {
         validateRuntime()
 
         val workingDir = project.layout.buildDirectory.dir("version-master/git")
-        project.tasks.register<RetrieveGitCommitCountTask>("retrieveGitCommitCount") {
+        project.tasks.register<RetrieveGitCommitCount>("retrieveGitCommitCount") {
             commitCountFile.set(workingDir.map { it.file("commit-count.txt") })
         }
-        project.tasks.register<RetrieveGitTagListTask>("retrieveGitTagList") {
+        project.tasks.register<RetrieveGitTagList>("retrieveGitTagList") {
             tagListFile.set(workingDir.map { it.file("tag-list.txt") })
         }
-        project.tasks.register<RetrieveGitDescriptionTask>("retrieveGitDescription") {
+        project.tasks.register<RetrieveGitDescription>("retrieveGitDescription") {
             gitDescribeFile.set(workingDir.map { it.file("git-description.txt") })
         }
     }
