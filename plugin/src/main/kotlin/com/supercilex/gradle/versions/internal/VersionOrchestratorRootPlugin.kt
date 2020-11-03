@@ -8,12 +8,12 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.register
 
 @Suppress("unused") // Used by Gradle
-internal class VersionMasterRootPlugin : Plugin<Project> {
+internal class VersionOrchestratorRootPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         check(project === project.rootProject)
         validateRuntime()
 
-        val workingDir = project.layout.buildDirectory.dir("version-master/git")
+        val workingDir = project.layout.buildDirectory.dir("version-orchestrator/git")
         project.tasks.register<RetrieveGitCommitCount>("retrieveGitCommitCount") {
             commitCountFile.set(workingDir.map { it.file("commit-count.txt") })
         }

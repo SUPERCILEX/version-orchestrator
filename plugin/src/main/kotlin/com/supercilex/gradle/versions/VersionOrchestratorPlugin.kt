@@ -3,8 +3,8 @@ package com.supercilex.gradle.versions
 import com.android.build.api.variant.impl.VariantOutputImpl
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-import com.supercilex.gradle.versions.internal.VERSION_MASTER_PATH
-import com.supercilex.gradle.versions.internal.VersionMasterRootPlugin
+import com.supercilex.gradle.versions.internal.VERSION_ORCHESTRATOR_PATH
+import com.supercilex.gradle.versions.internal.VersionOrchestratorRootPlugin
 import com.supercilex.gradle.versions.tasks.ComputeVersionCode
 import com.supercilex.gradle.versions.tasks.ComputeVersionName
 import com.supercilex.gradle.versions.tasks.RetrieveGitCommitCount
@@ -25,11 +25,11 @@ import org.gradle.kotlin.dsl.the
 import org.gradle.kotlin.dsl.withType
 
 @Suppress("unused") // Used by Gradle
-internal class VersionMasterPlugin : Plugin<Project> {
+internal class VersionOrchestratorPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        project.rootProject.plugins.apply(VersionMasterRootPlugin::class)
+        project.rootProject.plugins.apply(VersionOrchestratorRootPlugin::class)
 
-        project.extensions.create<VersionMasterExtension>(VERSION_MASTER_PATH).apply {
+        project.extensions.create<VersionOrchestratorExtension>(VERSION_ORCHESTRATOR_PATH).apply {
             configureDebugBuilds.convention(false)
             configureVersionCode.convention(true)
             configureVersionName.convention(true)
@@ -49,9 +49,9 @@ internal class VersionMasterPlugin : Plugin<Project> {
     }
 
     private fun applyInternal(project: Project) {
-        val extension = project.extensions.getByType<VersionMasterExtension>()
+        val extension = project.extensions.getByType<VersionOrchestratorExtension>()
         val android = project.the<BaseAppModuleExtension>()
-        val workingDir = project.layout.buildDirectory.dir("version-master")
+        val workingDir = project.layout.buildDirectory.dir("version-orchestrator")
 
         val computeVersionCode =
                 project.tasks.register<ComputeVersionCode>("computeAppVersionCode")

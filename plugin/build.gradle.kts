@@ -33,18 +33,18 @@ gradlePlugin {
         displayName = "Version Orchestrator"
         description = "Version Orchestrator provides an effortless and performant way to " +
                 "automate versioning your Android app."
-        implementationClass = "com.supercilex.gradle.versions.VersionMasterPlugin"
+        implementationClass = "com.supercilex.gradle.versions.VersionOrchestratorPlugin"
     }
 }
 
 pluginBundle {
-    website = "https://github.com/SUPERCILEX/version-master"
-    vcsUrl = "https://github.com/SUPERCILEX/version-master"
+    website = "https://github.com/SUPERCILEX/version-orchestrator"
+    vcsUrl = "https://github.com/SUPERCILEX/version-orchestrator"
     tags = listOf("android", "version", "versions", "versioning", "publishing")
 
     mavenCoordinates {
         groupId = project.group as String
-        artifactId = "version-master"
+        artifactId = "version-orchestrator"
     }
 }
 
@@ -66,14 +66,14 @@ publishing {
 
 afterEvaluate {
     publishing.publications.named<MavenPublication>("pluginMaven") {
-        artifactId = "version-master"
+        artifactId = "version-orchestrator"
 
         pom {
             name.set("Version Orchestrator")
             description.set(
                     "Version Orchestrator provides an effortless and performant way to automate " +
                             "versioning your Android app.")
-            url.set("https://github.com/SUPERCILEX/version-master")
+            url.set("https://github.com/SUPERCILEX/version-orchestrator")
 
             licenses {
                 license {
@@ -94,9 +94,9 @@ afterEvaluate {
             }
 
             scm {
-                connection.set("scm:git@github.com:SUPERCILEX/version-master.git")
-                developerConnection.set("scm:git@github.com:SUPERCILEX/version-master.git")
-                url.set("https://github.com/SUPERCILEX/version-master")
+                connection.set("scm:git@github.com:SUPERCILEX/version-orchestrator.git")
+                developerConnection.set("scm:git@github.com:SUPERCILEX/version-orchestrator.git")
+                url.set("https://github.com/SUPERCILEX/version-orchestrator")
             }
         }
     }

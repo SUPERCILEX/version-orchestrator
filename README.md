@@ -3,8 +3,8 @@
 </h1>
 
 <p align="center">
-    <a href="https://github.com/SUPERCILEX/version-master/actions">
-        <img src="https://github.com/SUPERCILEX/version-master/workflows/CI/CD/badge.svg" />
+    <a href="https://github.com/SUPERCILEX/version-orchestrator/actions">
+        <img src="https://github.com/SUPERCILEX/version-orchestrator/workflows/CI/CD/badge.svg" />
     </a>
     <!-- TODO -->
     <a href="https://plugins.gradle.org/plugin/com.supercilex.gradle.versions">
@@ -60,7 +60,7 @@ it is calculated using [`git describe`](https://git-scm.com/docs/git-describe#_e
 ## Installation
 
 Apply the plugin to each individual `com.android.application` module where you want to use Version
-Master through the `plugins {}` DSL:
+Orchestrator through the `plugins {}` DSL:
 
 <details open><summary>Kotlin</summary>
 
@@ -88,7 +88,7 @@ plugins {
 
 If you're prepared to cut yourself on the bleeding edge of Version Orchestrator development,
 snapshot builds are available from
-[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/supercilex/gradle/version-master/):
+[Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/supercilex/gradle/version-orchestrator/):
 
 <details open><summary>Kotlin</summary>
 
@@ -101,7 +101,7 @@ buildscript {
 
     dependencies {
         // ...
-        classpath("com.supercilex.gradle:version-master:1.0.0-SNAPSHOT")
+        classpath("com.supercilex.gradle:version-orchestrator:1.0.0-SNAPSHOT")
     }
 }
 ```
@@ -119,7 +119,7 @@ buildscript {
 
     dependencies {
         // ...
-        classpath 'com.supercilex.gradle:version-master:1.0.0-SNAPSHOT'
+        classpath 'com.supercilex.gradle:version-orchestrator:1.0.0-SNAPSHOT'
     }
 }
 ```
@@ -135,7 +135,7 @@ Version Orchestrator offers several options to fit your use case.
 To handle version codes yourself, disable version code configuration:
 
 ```kt
-versionMaster {
+versionOrchestrator {
     configureVersionCode.set(false)
 }
 ```
@@ -145,7 +145,7 @@ versionMaster {
 To handle version names yourself, disable version name configuration:
 
 ```kt
-versionMaster {
+versionOrchestrator {
     configureVersionName.set(false)
 }
 ```
@@ -156,7 +156,7 @@ To make debug builds as fast as possible, version codes and names are never chan
 by default. To enable versioning, enable debug build configuration:
 
 ```kt
-versionMaster {
+versionOrchestrator {
     configureDebugBuilds.set(true)
 }
 ```
@@ -166,7 +166,7 @@ versionMaster {
 If your app already has an established version code, you can tell Version Orchestrator about it:
 
 ```kt
-versionMaster {
+versionOrchestrator {
     versionCodeOffset.set(123)
 }
 ```
