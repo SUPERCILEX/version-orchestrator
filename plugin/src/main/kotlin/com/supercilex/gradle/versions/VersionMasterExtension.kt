@@ -4,7 +4,7 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
 
-/** The entry point for all Version Master related configuration. */
+/** The entry point for all Version Orchestrator related configuration. */
 abstract class VersionMasterExtension @JvmOverloads constructor(
         @Suppress("unused")
         @get:Internal

@@ -1,5 +1,5 @@
 <h1 align="center">
-    Version Master
+    Version Orchestrator
 </h1>
 
 <p align="center">
@@ -12,7 +12,8 @@
     </a>
 </p>
 
-Version Master provides an effortless and performant way to automate versioning your Android app.
+Version Orchestrator provides an effortless and performant way to automate versioning your Android
+app.
 
 ## Table of contents
 
@@ -21,7 +22,7 @@ Version Master provides an effortless and performant way to automate versioning 
    1. [Version names](#version-names)
 1. [Installation](#installation)
    1. [Snapshot builds](#snapshot-builds)
-1. [Configuring Version Master](#configuring-version-master)
+1. [Configuring Version Orchestrator](#configuring-version-orchestrator)
    1. [Disabling version code configuration](#disabling-version-code-configuration)
    1. [Disabling version name configuration](#disabling-version-name-configuration)
    1. [Enabling debug build configuration](#enabling-debug-build-configuration)
@@ -29,7 +30,7 @@ Version Master provides an effortless and performant way to automate versioning 
 
 ## How does it work?
 
-Version Master looks at your Git history to compute a version code and name for your app.
+Version Orchestrator looks at your Git history to compute a version code and name for your app.
 
 ### Version codes
 
@@ -85,8 +86,8 @@ plugins {
 
 ### Snapshot builds
 
-If you're prepared to cut yourself on the bleeding edge of Version Master development, snapshot
-builds are available from
+If you're prepared to cut yourself on the bleeding edge of Version Orchestrator development,
+snapshot builds are available from
 [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/com/supercilex/gradle/version-master/):
 
 <details open><summary>Kotlin</summary>
@@ -125,9 +126,9 @@ buildscript {
 
 </details>
 
-## Configuring Version Master
+## Configuring Version Orchestrator
 
-Version master offers several options to fit your use case.
+Version Orchestrator offers several options to fit your use case.
 
 ### Disabling version code configuration
 
@@ -162,7 +163,7 @@ versionMaster {
 
 ### For existing apps
 
-If your app already has an established version code, you can tell Version Master about it:
+If your app already has an established version code, you can tell Version Orchestrator about it:
 
 ```kt
 versionMaster {

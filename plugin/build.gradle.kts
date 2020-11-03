@@ -30,9 +30,9 @@ tasks.withType<PublishToMavenRepository>().configureEach {
 gradlePlugin {
     plugins.create("versions") {
         id = "com.supercilex.gradle.versions"
-        displayName = "Version Master"
-        description = "Version Master provides an effortless and performant way to automate " +
-                "versioning your Android app."
+        displayName = "Version Orchestrator"
+        description = "Version Orchestrator provides an effortless and performant way to " +
+                "automate versioning your Android app."
         implementationClass = "com.supercilex.gradle.versions.VersionMasterPlugin"
     }
 }
@@ -69,9 +69,9 @@ afterEvaluate {
         artifactId = "version-master"
 
         pom {
-            name.set("Version Master")
+            name.set("Version Orchestrator")
             description.set(
-                    "Version Master provides an effortless and performant way to automate " +
+                    "Version Orchestrator provides an effortless and performant way to automate " +
                             "versioning your Android app.")
             url.set("https://github.com/SUPERCILEX/version-master")
 

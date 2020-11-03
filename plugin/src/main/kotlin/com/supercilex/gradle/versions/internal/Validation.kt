@@ -13,7 +13,7 @@ internal fun validateRuntime() {
 
     check(gradleVersion >= MIN_GRADLE_VERSION) {
         """
-        |Version Master's minimum Gradle version is at least $MIN_GRADLE_VERSION and yours
+        |Version Orchestrator's minimum Gradle version is at least $MIN_GRADLE_VERSION and yours
         |is $gradleVersion. Find the latest version at
         |https://github.com/gradle/gradle/releases/latest, then run
         |$ ./gradlew wrapper --gradle-version=${"$"}LATEST --distribution-type=ALL
@@ -22,7 +22,7 @@ internal fun validateRuntime() {
 
     check(agpVersion >= MIN_AGP_VERSION) {
         """
-        |Version Master's minimum Android Gradle Plugin version is at least
+        |Version Orchestrator's minimum Android Gradle Plugin version is at least
         |$MIN_AGP_VERSION and yours is $agpVersion. Find the latest version and upgrade
         |instructions at https://developer.android.com/studio/releases/gradle-plugin.
         """.trimMargin()

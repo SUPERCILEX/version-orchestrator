@@ -42,7 +42,7 @@ internal class VersionMasterPlugin : Plugin<Project> {
         project.afterEvaluate {
             if (project.plugins.findPlugin(AppPlugin::class) == null) {
                 throw IllegalStateException(
-                        "The Android Gradle Plugin was not applied. Version Master " +
+                        "The Android Gradle Plugin was not applied. Version Orchestrator " +
                                 "cannot be configured.")
             }
         }
