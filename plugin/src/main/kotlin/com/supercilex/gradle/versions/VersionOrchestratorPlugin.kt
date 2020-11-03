@@ -103,12 +103,13 @@ internal class VersionOrchestratorPlugin : Plugin<Project> {
                     }
 
                     if (extension.configureVersionName.forUseAtConfigurationTime().get()) {
+                        output as VariantOutputImpl
                         output.versionName.set(computeVersionName.map {
-                            it.versionNameFile.get().asFile.readText()
+                            it.versionNameFile.get().asFile.readText() + "-" + output.baseName
                         })
-                        (output as VariantOutputImpl).outputFileName.set(computeVersionName.map {
+                        output.outputFileName.set(computeVersionName.map {
                             "${basePlugin.archivesBaseName}-${applicationId.get()}-" +
-                                    "${output.baseName}-${output.versionName.get()}.apk"
+                                    "${output.versionName.get()}.apk"
                         })
                     }
                 }

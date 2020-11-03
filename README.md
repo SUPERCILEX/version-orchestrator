@@ -54,8 +54,9 @@ each major or minor release.
 
 ### Version names
 
-The version name is a combination of the latest tag, commit hash, and dirtiness flag. Currently,
-it is calculated using [`git describe`](https://git-scm.com/docs/git-describe#_examples).
+The version name is a combination of the latest tag, commit hash, dirtiness flag, and variant name.
+Currently, it is calculated using [`git describe`](https://git-scm.com/docs/git-describe#_examples)
+and your `buildType` name plus `productFlavor` name (if present).
 
 ## Installation
 
