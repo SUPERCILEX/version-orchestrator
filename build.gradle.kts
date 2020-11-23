@@ -1,16 +1,11 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 
-buildscript {
-    repositories.deps()
-
-    dependencies {
-        classpath(kotlin("gradle-plugin", embeddedKotlinVersion))
-    }
-}
-
 plugins {
     `lifecycle-base`
-    id("com.github.ben-manes.versions") version "0.28.0"
+    id("com.github.ben-manes.versions") version "0.36.0"
+
+    kotlin("jvm") version "1.4.20" apply false
+    id("com.gradle.plugin-publish") version "0.12.0" apply false
 }
 
 buildScan {
@@ -25,7 +20,16 @@ tasks.wrapper {
 }
 
 allprojects {
-    repositories.deps()
+    repositories {
+        google().content {
+            includeGroup("com.android")
+            includeGroupByRegex("com\\.android\\..*")
+            includeGroupByRegex("com\\.google\\..*")
+            includeGroupByRegex("androidx\\..*")
+        }
+
+        jcenter()
+    }
 
     afterEvaluate {
         convention.findByType<JavaPluginExtension>()?.apply {

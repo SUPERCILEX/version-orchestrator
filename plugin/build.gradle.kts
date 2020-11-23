@@ -2,11 +2,12 @@ plugins {
     `java-gradle-plugin`
     `kotlin-dsl`
     `maven-publish`
-    id("com.gradle.plugin-publish") version "0.12.0"
+    id("com.gradle.plugin-publish")
 }
 
 dependencies {
-    compileOnly(Config.Libs.All.agp) // Compile only to not force a specific AGP version
+    // Compile only to not force a specific AGP version
+    compileOnly("com.android.tools.build:gradle:4.2.0-alpha01")
 }
 
 java {
