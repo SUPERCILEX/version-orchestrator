@@ -3,10 +3,9 @@ package com.supercilex.gradle.versions
 import com.android.build.api.component.analytics.AnalyticsEnabledApplicationVariant
 import com.android.build.api.extension.ApplicationAndroidComponentsExtension
 import com.android.build.api.variant.ApplicationVariant
-import com.android.build.api.variant.impl.ApplicationVariantImpl
 import com.android.build.api.variant.impl.VariantOutputImpl
 import com.android.build.gradle.AppPlugin
-import com.android.build.gradle.internal.component.ApkCreationConfig
+import com.android.build.gradle.internal.component.ComponentCreationConfig
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.supercilex.gradle.versions.internal.VERSION_ORCHESTRATOR_PATH
 import com.supercilex.gradle.versions.internal.VersionOrchestratorRootPlugin
@@ -123,8 +122,8 @@ internal class VersionOrchestratorPlugin : Plugin<Project> {
 
     private fun getDebuggableHack(variant: ApplicationVariant): Boolean {
         val hackToGetDebuggable =
-                ((variant as? AnalyticsEnabledApplicationVariant)?.delegate
-                        ?: (variant as ApplicationVariantImpl).delegate) as ApkCreationConfig
+                ((variant as? AnalyticsEnabledApplicationVariant)?.delegate ?: variant)
+                        as ComponentCreationConfig
         return hackToGetDebuggable.debuggable
     }
 }
