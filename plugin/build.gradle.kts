@@ -7,7 +7,7 @@ plugins {
 
 dependencies {
     // Compile only to not force a specific AGP version
-    compileOnly("com.android.tools.build:gradle:4.2.0-alpha01")
+    compileOnly("com.android.tools.build:gradle:4.2.0-beta03")
 }
 
 java {

@@ -1,7 +1,12 @@
 package com.supercilex.gradle.versions
 
+import com.android.build.api.component.analytics.AnalyticsEnabledApplicationVariant
+import com.android.build.api.extension.ApplicationAndroidComponentsExtension
+import com.android.build.api.variant.ApplicationVariant
+import com.android.build.api.variant.impl.ApplicationVariantImpl
 import com.android.build.api.variant.impl.VariantOutputImpl
 import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.internal.component.ApkCreationConfig
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.supercilex.gradle.versions.internal.VERSION_ORCHESTRATOR_PATH
 import com.supercilex.gradle.versions.internal.VersionOrchestratorRootPlugin
@@ -87,33 +92,39 @@ internal class VersionOrchestratorPlugin : Plugin<Project> {
         }
 
         val basePlugin = project.convention.getPlugin<BasePluginConvention>()
-        android.onVariants v@{
+        val androidExtension = project.extensions.getByType<ApplicationAndroidComponentsExtension>()
+        androidExtension.onVariants v@{ variant ->
             val shouldConfigureDebugBuilds =
                     extension.configureDebugBuilds.forUseAtConfigurationTime().get()
-            if (!enabled || debuggable && !shouldConfigureDebugBuilds) {
+            if (getDebuggableHack(variant) && !shouldConfigureDebugBuilds) {
                 return@v
             }
 
-            onProperties {
-                for (output in outputs) {
-                    if (extension.configureVersionCode.forUseAtConfigurationTime().get()) {
-                        output.versionCode.set(computeVersionCode.map {
-                            it.versionCodeFile.get().asFile.readText().toInt()
-                        })
-                    }
+            for (output in variant.outputs) {
+                if (extension.configureVersionCode.forUseAtConfigurationTime().get()) {
+                    output.versionCode.set(computeVersionCode.map {
+                        it.versionCodeFile.get().asFile.readText().toInt()
+                    })
+                }
 
-                    if (extension.configureVersionName.forUseAtConfigurationTime().get()) {
-                        output as VariantOutputImpl
-                        output.versionName.set(computeVersionName.map {
-                            it.versionNameFile.get().asFile.readText() + "-" + output.baseName
-                        })
-                        output.outputFileName.set(computeVersionName.map {
-                            "${basePlugin.archivesBaseName}-${applicationId.get()}-" +
-                                    "${output.versionName.get()}.apk"
-                        })
-                    }
+                if (extension.configureVersionName.forUseAtConfigurationTime().get()) {
+                    output as VariantOutputImpl
+                    output.versionName.set(computeVersionName.map {
+                        it.versionNameFile.get().asFile.readText() + "-" + output.baseName
+                    })
+                    output.outputFileName.set(computeVersionName.map {
+                        "${basePlugin.archivesBaseName}-${variant.applicationId.get()}-" +
+                                "${output.versionName.get()}.apk"
+                    })
                 }
             }
         }
+    }
+
+    private fun getDebuggableHack(variant: ApplicationVariant): Boolean {
+        val hackToGetDebuggable =
+                ((variant as? AnalyticsEnabledApplicationVariant)?.delegate
+                        ?: (variant as ApplicationVariantImpl).delegate) as ApkCreationConfig
+        return hackToGetDebuggable.debuggable
     }
 }
