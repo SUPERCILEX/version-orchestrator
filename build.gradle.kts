@@ -4,7 +4,7 @@ plugins {
     `lifecycle-base`
     id("com.github.ben-manes.versions") version "0.36.0"
 
-    kotlin("jvm") version "1.4.20" apply false
+    kotlin("jvm") version "1.4.21" apply false
     id("com.gradle.plugin-publish") version "0.12.0" apply false
 }
 
