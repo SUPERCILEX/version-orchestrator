@@ -4,8 +4,8 @@ import com.android.Version
 import org.gradle.util.GradleVersion
 import org.gradle.util.VersionNumber
 
-private val MIN_GRADLE_VERSION = GradleVersion.version("6.5")
-private val MIN_AGP_VERSION = VersionNumber.parse("4.1.0-alpha05")
+private val MIN_GRADLE_VERSION = GradleVersion.version("6.8")
+private val MIN_AGP_VERSION = VersionNumber.parse("4.2.0-beta03")
 
 internal fun validateRuntime() {
     val gradleVersion = GradleVersion.current()
