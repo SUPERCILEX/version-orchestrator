@@ -1,15 +1,18 @@
 package com.supercilex.gradle.versions.internal
 
-import com.android.Version
+import com.android.build.api.AndroidPluginVersion
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import com.android.build.gradle.AppPlugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.findByType
+import org.gradle.kotlin.dsl.withType
 import org.gradle.util.GradleVersion
-import org.gradle.util.VersionNumber
 
-private val MIN_GRADLE_VERSION = GradleVersion.version("6.8")
-private val MIN_AGP_VERSION = VersionNumber.parse("4.2.0-beta03")
+private val MIN_GRADLE_VERSION = GradleVersion.version("7.0")
+private val MIN_AGP_VERSION = AndroidPluginVersion(7, 0)
 
-internal fun validateRuntime() {
+internal fun validateRuntime(project: Project) {
     val gradleVersion = GradleVersion.current()
-    val agpVersion = VersionNumber.parse(Version.ANDROID_GRADLE_PLUGIN_VERSION)
 
     check(gradleVersion >= MIN_GRADLE_VERSION) {
         """
@@ -20,11 +23,15 @@ internal fun validateRuntime() {
         """.trimMargin()
     }
 
-    check(agpVersion >= MIN_AGP_VERSION) {
-        """
-        |Version Orchestrator's minimum Android Gradle Plugin version is at least
-        |$MIN_AGP_VERSION and yours is $agpVersion. Find the latest version and upgrade
-        |instructions at https://developer.android.com/studio/releases/gradle-plugin.
-        """.trimMargin()
+    project.plugins.withType<AppPlugin> {
+        val agpVersion = project.extensions.findByType<ApplicationAndroidComponentsExtension>()?.pluginVersion
+
+        check(null != agpVersion && agpVersion >= MIN_AGP_VERSION) {
+            """
+            |Version Orchestrator's minimum Android Gradle Plugin version is at least
+            |$MIN_AGP_VERSION and yours is $agpVersion. Find the latest version and upgrade
+            |instructions at https://developer.android.com/studio/releases/gradle-plugin.
+            """.trimMargin()
+        }
     }
 }

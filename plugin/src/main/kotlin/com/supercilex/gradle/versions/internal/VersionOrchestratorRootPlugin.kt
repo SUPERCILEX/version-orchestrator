@@ -11,7 +11,8 @@ import org.gradle.kotlin.dsl.register
 internal class VersionOrchestratorRootPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         check(project === project.rootProject)
-        validateRuntime()
+
+        validateRuntime(project)
 
         val workingDir = project.layout.buildDirectory.dir("version-orchestrator/git")
         project.tasks.register<RetrieveGitCommitCount>("retrieveGitCommitCount") {
