@@ -1,6 +1,6 @@
 package com.supercilex.gradle.versions.internal
 
-import com.android.Version
+import com.supercilex.gradle.versions.compat.VersionCompat
 import org.gradle.util.GradleVersion
 import org.gradle.util.VersionNumber
 
@@ -9,7 +9,7 @@ private val MIN_AGP_VERSION = VersionNumber.parse("4.2.0-beta03")
 
 internal fun validateRuntime() {
     val gradleVersion = GradleVersion.current()
-    val agpVersion = VersionNumber.parse(Version.ANDROID_GRADLE_PLUGIN_VERSION)
+    val agpVersion = VersionNumber.parse(VersionCompat.ANDROID_GRADLE_PLUGIN_VERSION)
 
     check(gradleVersion >= MIN_GRADLE_VERSION) {
         """
