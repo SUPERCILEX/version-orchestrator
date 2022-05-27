@@ -1,12 +1,12 @@
 package com.supercilex.gradle.versions
 
 import com.android.build.api.component.analytics.AnalyticsEnabledApplicationVariant
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.api.variant.ApplicationVariant
 import com.android.build.api.variant.impl.VariantOutputImpl
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.internal.component.ComponentCreationConfig
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-import com.supercilex.gradle.versions.compat.ApplicationAndroidComponentsExtensionCompat
 import com.supercilex.gradle.versions.internal.VERSION_ORCHESTRATOR_PATH
 import com.supercilex.gradle.versions.internal.VersionOrchestratorRootPlugin
 import com.supercilex.gradle.versions.tasks.ComputeVersionCode
@@ -91,7 +91,7 @@ internal class VersionOrchestratorPlugin : Plugin<Project> {
         }
 
         val basePlugin = project.convention.getPlugin<BasePluginConvention>()
-        val androidExtension = ApplicationAndroidComponentsExtensionCompat.get(project)
+        val androidExtension = project.extensions.getByType<ApplicationAndroidComponentsExtension>()
         androidExtension.onVariants v@{ variant ->
             val shouldConfigureDebugBuilds =
                     extension.configureDebugBuilds.forUseAtConfigurationTime().get()
